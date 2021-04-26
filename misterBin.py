@@ -4,7 +4,7 @@ import requests
 from urllib.parse import quote
 import base64
 from bs4 import BeautifulSoup as bs
-import urllib
+import urllib3 as ul
 
 u = r'https://www.tmbc.gov.uk/do-it-online/miscellaneous-forms/refuse-and-recycling-collection-dates'
 
@@ -25,6 +25,11 @@ uprn = '010013923098'
 
 req = f'https://www.tmbc.gov.uk/utils/pclu.php?postcode={enc(postcode)}&csrf={enc(token)}'
 req2 = f'https://www.tmbc.gov.uk/utils/tmbc_waste_services/handler.php?adr_uprn={enc(uprn)}&valid_address=MQ%3D%3D&csrf={enc(token)}&sqss='
+
+http_pool = ul.connection_from_url(req2)
+bz = http_pool.urlopen('GET', req)
+
+print(bz.data)
 
 a = requests.get(req2, allow_redirects=True, headers={"Sec-Fetch-Mode":"cors"})
 print(a.text)
